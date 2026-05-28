@@ -14,10 +14,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'          # 升级到 Node.js 22，满足 pnpm 11 要求
+          node-version: '22'
 
       - name: Install pnpm
         run: npm install -g pnpm@11.3.0
+
+      - name: Allow esbuild build scripts
+        run: echo "allow-build=esbuild" >> .npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -30,7 +33,7 @@ jobs:
 
       - name: Prepare Vercel output
         run: |
-          # 静态文件
+          # 靜態文件
           mkdir -p .vercel/output/static
           cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
           if [ -d .vercel/output/static/public ]; then
