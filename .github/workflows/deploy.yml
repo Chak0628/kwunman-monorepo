@@ -23,13 +23,10 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build frontend
-        run: |
-          cd artifacts/kwunman-os
-          # 使用根目录提升的 vite 可执行文件（保证能找到）
-          ../../node_modules/.bin/vite build --emptyOutDir
+        run: pnpm --filter ./artifacts/kwunman-os run build
 
       - name: Build backend
-        run: cd artifacts/api-server && pnpm run build
+        run: pnpm --filter ./artifacts/api-server run build
 
       - name: Prepare Vercel output
         run: |
