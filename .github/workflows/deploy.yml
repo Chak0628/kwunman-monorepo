@@ -23,13 +23,14 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build frontend
-        run: cd artifacts/kwunman-os && npx vite build --emptyOutDir
+        run: cd artifacts/kwunman-os && pnpm exec vite build --emptyOutDir
 
       - name: Build backend
-        run: pnpm --filter @workspace/api-server run build
+        run: cd artifacts/api-server && pnpm run build
 
       - name: Prepare Vercel output
         run: |
+          # 静态文件
           mkdir -p .vercel/output/static
           cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
           if [ -d .vercel/output/static/public ]; then
@@ -38,11 +39,13 @@ jobs:
           fi
           echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
 
+          # API Serverless Function
           mkdir -p .vercel/output/functions/api/[...path].func
           cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/
           echo "import app from './index.mjs'; export default app;" > .vercel/output/functions/api/[...path].func/index.js
           echo '{ "runtime": "nodejs20.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
 
+          # Vercel 配置
           echo '{ "version": 3 }' > .vercel/output/config.json
           echo '{ "routes": [ { "src": "/api/(.*)", "dest": "/api/[...path]" } ] }' >> .vercel/output/config.json
 
