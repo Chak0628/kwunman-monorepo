@@ -1,7 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 
-// 如果不在 Vercel 环境，则启动服务器监听
 if (!process.env["VERCEL"]) {
   const rawPort = process.env["PORT"] || "3000";
   const port = Number(rawPort);
@@ -14,5 +13,4 @@ if (!process.env["VERCEL"]) {
   });
 }
 
-// 导出 app 供 Vercel Serverless 使用
 export default app;

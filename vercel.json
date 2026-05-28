@@ -1,8 +1,0 @@
-{
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "cd artifacts/kwunman-os && pnpm run build && cd ../../artifacts/api-server && pnpm run build",
-  "outputDirectory": "artifacts/kwunman-os/dist",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
