@@ -23,27 +23,23 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build frontend
-        run: pnpm run build --filter @workspace/kwunman-os
+        run: cd artifacts/kwunman-os && pnpm run build
 
       - name: Build backend
-        run: pnpm run build --filter @workspace/api-server
+        run: cd artifacts/api-server && pnpm run build
 
       - name: Prepare Vercel output
         run: |
           mkdir -p .vercel/output/static
           cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
-          # 如果前端 dist 內有 public 文件夾，將其內容移到根目錄
           if [ -d .vercel/output/static/public ]; then
             mv .vercel/output/static/public/* .vercel/output/static/
             rm -rf .vercel/output/static/public
           fi
-          # 加入 SPA 路由規則
           echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
-          # 準備 API Serverless Function
           mkdir -p .vercel/output/functions/api/[...path].func
           cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/
           cp api/[...path].js .vercel/output/functions/api/[...path].func/index.js
-          # 建立 Vercel 配置文件
           echo '{ "version": 3 }' > .vercel/output/config.json
           echo '{ "runtime": "nodejs20.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
 
