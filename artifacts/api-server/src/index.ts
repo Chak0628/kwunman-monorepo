@@ -1,11 +1,8 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 
-// 如果在 Vercel 环境中运行，直接导出 app 作为无服务器函数
-if (process.env["VERCEL"]) {
-  export default app;
-} else {
-  // 本地开发或传统服务器模式
+// 如果不在 Vercel 环境，则启动服务器监听
+if (!process.env["VERCEL"]) {
   const rawPort = process.env["PORT"] || "3000";
   const port = Number(rawPort);
   app.listen(port, (err: any) => {
@@ -16,3 +13,6 @@ if (process.env["VERCEL"]) {
     logger.info({ port }, "Server listening");
   });
 }
+
+// 导出 app 供 Vercel Serverless 使用
+export default app;
