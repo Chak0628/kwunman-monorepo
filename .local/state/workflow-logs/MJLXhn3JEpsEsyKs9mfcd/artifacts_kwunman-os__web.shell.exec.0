@@ -1,0 +1,1803 @@
+
+> @workspace/kwunman-os@0.0.0 dev /home/runner/workspace/artifacts/kwunman-os
+> vite --config vite.config.ts --host 0.0.0.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J
+  [32m[1mVITE[22m v7.3.3[39m  [2mready in [0m[1m1083[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m23179[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.24.0.2:[1m23179[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:02:29 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:02:30 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:02:40 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:02:52 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x4)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:04:03 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x5)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:16:01 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:16:02 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:16:03 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:16:16 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:16:21 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:16:21 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx[22m [33m(x2)[39m
+[2m8:16:21 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+[2m8:16:21 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:16:46 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:22:46 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:23:28 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:23:29 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:25:37 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:25:41 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:38:36 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:38:37 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x4)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:38:49 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x5)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:38:51 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x6)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:39:05 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x7)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:53:15 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:53:15 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx[22m [33m(x2)[39m
+[2m8:53:15 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+[2m8:53:15 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:57:10 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:57:13 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:57:20 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:57:36 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:57:51 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/index.css[22m
+[replit-cartographer] Error processing /home/runner/workspace/artifacts/kwunman-os/src/pages/dashboard.tsx: SyntaxError: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (319:20)
+    at constructor (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:365:19)
+    at TypeScriptParserMixin.raise (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:6616:19)
+    at TypeScriptParserMixin.jsxParseElementAt (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:4754:18)
+    at TypeScriptParserMixin.jsxParseElement (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10848:21)
+    at /home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:9792:39
+    at TypeScriptParserMixin.tryParse (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:9792:18)
+    at /home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10801:23)
+    at /home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12438:16)
+    at TypeScriptParserMixin.parseExpression (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:10797:17)
+    at TypeScriptParserMixin.parseReturnStatement (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:13159:28)
+    at TypeScriptParserMixin.parseStatementContent (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12815:21)
+    at TypeScriptParserMixin.parseStatementContent (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:9525:18)
+    at TypeScriptParserMixin.parseStatementLike (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12784:17)
+    at TypeScriptParserMixin.parseStatementListItem (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12764:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:13333:61)
+    at TypeScriptParserMixin.parseBlockBody (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:13326:10)
+    at TypeScriptParserMixin.parseBlock (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:13314:10)
+    at TypeScriptParserMixin.parseFunctionBody (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12117:24)
+    at TypeScriptParserMixin.parseArrowExpression (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:12092:10)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11704:12)
+    at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/home/runner/workspace/node_modules/[4m.pnpm[24m/@babel+parser@7.29.3/node_modules/[4m@babel/parser[24m/lib/index.js:11098:23) {
+  code: [32m'BABEL_PARSER_SYNTAX_ERROR'[39m,
+  reasonCode: [32m'UnwrappedAdjacentJSXElements'[39m,
+  loc: Position { line: [33m319[39m, column: [33m20[39m, index: [33m13572[39m },
+  pos: [33m13572[39m,
+  syntaxPlugin: [32m'jsx'[39m
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:57:52 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: /home/runner/workspace/artifacts/kwunman-os/src/pages/dashboard.tsx: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (319:20)
+
+[0m [90m 317 |[31m                       )}
+ [90m 318 |[31m                     [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[31m[1m>[22m[31m[90m 319 |[31m                     [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m                     [31m[1m^[22m[31m
+ [90m 320 |[31m                   )[33m;[31m
+ [90m 321 |[31m                 })}
+ [90m 322 |[31m               [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36m/home/runner/workspace/artifacts/kwunman-os/src/pages/dashboard.tsx[39m:319:20
+[33m  317 |                        )}
+  318 |                      </div>
+  319 |                      </div>
+      |                      ^
+  320 |                    );
+  321 |                  })}[39m
+      at constructor (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:365:19)
+      at TypeScriptParserMixin.raise (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:6616:19)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:4754:18)
+      at TypeScriptParserMixin.jsxParseElement (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10848:21)
+      at /home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:9792:39
+      at TypeScriptParserMixin.tryParse (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:6924:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:9792:18)
+      at /home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10817:39
+      at TypeScriptParserMixin.allowInAnd (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12443:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10817:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12510:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11692:28)
+      at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10848:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:9803:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10801:23)
+      at /home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10797:39
+      at TypeScriptParserMixin.allowInAnd (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12438:16)
+      at TypeScriptParserMixin.parseExpression (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:10797:17)
+      at TypeScriptParserMixin.parseReturnStatement (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:13159:28)
+      at TypeScriptParserMixin.parseStatementContent (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12815:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:9525:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12784:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12764:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:13333:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:13326:10)
+      at TypeScriptParserMixin.parseBlock (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:13314:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12117:24)
+      at TypeScriptParserMixin.parseArrowExpression (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:12092:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11704:12)
+      at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/runner/workspace/node_modules/.pnpm/@babel+parser@7.29.3/node_modules/@babel/parser/lib/index.js:11098:23)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:58:39 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m8:59:30 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:12:24 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:12:27 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:12:45 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:18:01 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:18:01 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx[22m [33m(x2)[39m
+[2m9:18:01 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+[2m9:18:01 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:20:12 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:20:19 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m [33m(x2)[39m
+[2m9:20:20 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33mreact-to-print[32m[39m
+[2m9:20:20 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1779700820629,"name":"Error","message":"Cannot read properties of null (reading 'useCallback')","stack":"\n\n    at Documents /home/runner/workspace/artifacts/kwunman-os/src/pages/documents.tsx:423:23\n\n\n\n\n\n\n","loc":{"line":423,"column":23,"file":"/home/runner/workspace/artifacts/kwunman-os/src/pages/documents.tsx"},"frame":"421|              </div>\n422|            )}\n423|          </CardContent>\n   |                        ^\n424|        </Card>\n425|  "}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:31:52 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:32:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:32:44 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:32:53 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x4)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:33:06 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:33:16 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:33:55 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:34:04 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x4)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:34:16 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x5)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:34:41 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x6)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:36:00 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/payroll.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:38:00 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:38:17 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/new-quote.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:38:18 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/payroll.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:43:14 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:44:14 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx, /src/pages/documents.tsx[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:44:14 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/expenses.tsx, /src/pages/dashboard.tsx, /src/pages/new-quote.tsx, /src/pages/payslips-employee.tsx, /src/pages/projects.tsx, /src/pages/profit.tsx, /src/pages/clients.tsx, /src/pages/schedule.tsx, /src/pages/cashflow.tsx, /src/pages/employee-accounts.tsx, /src/pages/payroll.tsx, /src/pages/documents.tsx[22m [33m(x2)[39m
+[2m9:44:15 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+[2m9:44:15 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts (resolved id: /home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts) in /home/runner/workspace/lib/api-client-react/src/index.ts. Does the file exist?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:45:57 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/employee-accounts.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m9:46:07 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/payroll.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m10:51:41 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m10:51:42 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:17:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:17:34 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x4)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:19:02 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x5)[39m
+[2m11:19:03 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33m@radix-ui/react-dropdown-menu[32m[39m
+[2m11:19:03 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:19:18 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:20:13 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:20:24 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:20:55 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x4)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:21:02 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/projects.tsx, /src/index.css[22m [33m(x5)[39m
+[41m[30m ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL [39m[49m [31m@workspace/kwunman-os@0.0.0 dev: `vite --config vite.config.ts --host 0.0.0.0`[39m
+[31mCommand failed with signal "SIGTERM"[39m

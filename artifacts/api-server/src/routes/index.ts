@@ -1,0 +1,40 @@
+import { Router, type IRouter } from "express";
+import healthRouter from "./health";
+import dashboardRouter from "./dashboard";
+import projectsRouter from "./projects";
+import clientsRouter from "./clients";
+import expensesRouter from "./expenses";
+import expenseCategoriesRouter from "./expense-categories";
+import expenseMerchantsRouter from "./expense-merchants";
+import chemFormsRouter from "./chem-forms";
+import storageRouter from "./storage";
+import paymentsRouter from "./payments";
+import quoteItemsRouter from "./quote-items";
+import authRouter from "./auth";
+import usersRouter from "./users";
+import schedulesRouter from "./schedules";
+import payslipsRouter from "./payslips";
+import invoicesRouter from "./invoices";
+import noteTemplatesRouter from "./note-templates";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use(authRouter);
+router.use(dashboardRouter);
+router.use(projectsRouter);
+router.use(clientsRouter);
+router.use(expensesRouter);
+router.use(expenseCategoriesRouter);
+router.use(expenseMerchantsRouter);
+router.use(chemFormsRouter);
+router.use(storageRouter);
+router.use(paymentsRouter);
+router.use(quoteItemsRouter);
+router.use(usersRouter);
+router.use(schedulesRouter);
+router.use(payslipsRouter);
+router.use(invoicesRouter);
+router.use(noteTemplatesRouter);
+
+export default router;

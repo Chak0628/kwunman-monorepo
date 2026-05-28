@@ -1,0 +1,2361 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: KwunMan OS - 冠文鋼結構管理系統 API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: projects
+    description: Project (quote) management
+  - name: clients
+    description: Client database
+  - name: expenses
+    description: Expense reimbursement
+  - name: dashboard
+    description: Dashboard summary data
+  - name: auth
+    description: Authentication
+  - name: users
+    description: User account management
+  - name: schedules
+    description: Employee work schedules
+  - name: payslips
+    description: Payslip management
+  - name: note-templates
+    description: Shared note/remarks templates
+  - name: expense-categories
+    description: Expense category management
+  - name: expense-merchants
+    description: Merchant management for expenses
+  - name: chem-forms
+    description: 個人墊支申請 (Chem Forms)
+  - name: Storage
+    description: Object storage upload and serving endpoints
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # ─── DASHBOARD ────────────────────────────────────────────────────────────────
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard KPI summary
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/pending-balance:
+    get:
+      operationId: getPendingBalance
+      tags: [dashboard]
+      summary: List projects pending balance collection
+      responses:
+        "200":
+          description: List of projects with pending balance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+
+  # ─── PROJECTS ─────────────────────────────────────────────────────────────────
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all projects with optional filters
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: ["報價中", "待通知", "待收首期", "施工中", "待收款", "待收尾期", "已完成", "不成功"]
+        - name: taxView
+          in: query
+          schema:
+            type: string
+            enum: ["kwunman", "gov"]
+        - name: quarter
+          in: query
+          schema:
+            type: string
+        - name: client
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a new project / quote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/next-id:
+    get:
+      operationId: getNextProjectId
+      tags: [projects]
+      summary: Get the next auto-incremented project ID
+      responses:
+        "200":
+          description: Next project ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NextProjectId"
+
+  /projects/quarterly-stats:
+    get:
+      operationId: getQuarterlyStats
+      tags: [projects]
+      summary: Get quarterly financial statistics
+      parameters:
+        - name: taxView
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: ["kwunman", "gov"]
+      responses:
+        "200":
+          description: Quarterly statistics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuarterlyStat"
+
+  /projects/{projectId}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a single project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectUpdate"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /projects/{projectId}/mark-received:
+    post:
+      operationId: markProjectReceived
+      tags: [projects]
+      summary: Mark project balance as fully received
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receivedDate:
+                  type: ["string", "null"]
+                finalReceived:
+                  type: ["number", "null"]
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  # ─── INVOICES ─────────────────────────────────────────────────────────────────
+  /invoices:
+    get:
+      operationId: listInvoices
+      tags: [projects]
+      summary: List invoices, optionally filtered by quoteId
+      parameters:
+        - name: quoteId
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of invoices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+    post:
+      operationId: createInvoice
+      tags: [projects]
+      summary: Create a new invoice for a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceInput"
+      responses:
+        "201":
+          description: Created invoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+
+  /invoices/next-no:
+    get:
+      operationId: getNextInvoiceNo
+      tags: [projects]
+      summary: Get next auto-incremented invoice number
+      responses:
+        "200":
+          description: Next invoice number
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [nextNo]
+                properties:
+                  nextNo:
+                    type: string
+
+  /invoices/{invoiceId}:
+    patch:
+      operationId: updateInvoice
+      tags: [projects]
+      summary: Update an invoice (e.g. mark as paid)
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceUpdate"
+      responses:
+        "200":
+          description: Updated invoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+    delete:
+      operationId: deleteInvoice
+      tags: [projects]
+      summary: Delete an invoice
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── PAYMENTS ─────────────────────────────────────────────────────────────────
+  /payments:
+    get:
+      operationId: listPayments
+      tags: [projects]
+      summary: List payments for a project
+      parameters:
+        - name: quoteId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+    post:
+      operationId: createPayment
+      tags: [projects]
+      summary: Add a payment record to a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentInput"
+      responses:
+        "201":
+          description: Created payment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  /payments/{paymentId}:
+    delete:
+      operationId: deletePayment
+      tags: [projects]
+      summary: Delete a payment record
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── QUOTE ITEMS ──────────────────────────────────────────────────────────────
+  /quote-items:
+    get:
+      operationId: listQuoteItems
+      tags: [projects]
+      summary: List line items for a quote
+      parameters:
+        - name: quoteId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of quote items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuoteItem"
+    post:
+      operationId: createQuoteItem
+      tags: [projects]
+      summary: Add a line item to a quote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuoteItemInput"
+      responses:
+        "201":
+          description: Created quote item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteItem"
+
+  /quote-items/{itemId}:
+    patch:
+      operationId: updateQuoteItem
+      tags: [projects]
+      summary: Update a line item
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuoteItemUpdate"
+      responses:
+        "200":
+          description: Updated quote item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteItem"
+    delete:
+      operationId: deleteQuoteItem
+      tags: [projects]
+      summary: Delete a line item
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── CLIENTS ──────────────────────────────────────────────────────────────────
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List all clients
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      operationId: createClient
+      tags: [clients]
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientInput"
+      responses:
+        "201":
+          description: Created client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{clientId}:
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      summary: Update a client
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientUpdate"
+      responses:
+        "200":
+          description: Updated client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+    delete:
+      operationId: deleteClient
+      tags: [clients]
+      summary: Delete a client
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── EXPENSES ─────────────────────────────────────────────────────────────────
+  /expenses:
+    get:
+      operationId: listExpenses
+      tags: [expenses]
+      summary: List all expenses
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: ["pending", "approved", "rejected"]
+        - name: projectId
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of expenses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expense"
+    post:
+      operationId: createExpense
+      tags: [expenses]
+      summary: Create an expense claim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseInput"
+      responses:
+        "201":
+          description: Created expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+
+  /expenses/{expenseId}:
+    patch:
+      operationId: updateExpense
+      tags: [expenses]
+      summary: Update expense (e.g. approve/reject)
+      parameters:
+        - name: expenseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseUpdate"
+      responses:
+        "200":
+          description: Updated expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+    delete:
+      operationId: deleteExpense
+      tags: [expenses]
+      summary: Delete an expense
+      parameters:
+        - name: expenseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── EXPENSE CATEGORIES ────────────────────────────────────────────────────────
+  /expense-categories:
+    get:
+      operationId: listExpenseCategories
+      tags: [expense-categories]
+      summary: List all expense categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExpenseCategory"
+    post:
+      operationId: createExpenseCategory
+      tags: [expense-categories]
+      summary: Create an expense category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseCategoryInput"
+      responses:
+        "201":
+          description: Created category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpenseCategory"
+
+  /expense-categories/{categoryId}:
+    patch:
+      operationId: updateExpenseCategory
+      tags: [expense-categories]
+      summary: Update an expense category
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseCategoryInput"
+      responses:
+        "200":
+          description: Updated category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpenseCategory"
+    delete:
+      operationId: deleteExpenseCategory
+      tags: [expense-categories]
+      summary: Delete an expense category
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── EXPENSE MERCHANTS ─────────────────────────────────────────────────────────
+  /expense-merchants:
+    get:
+      operationId: listExpenseMerchants
+      tags: [expense-merchants]
+      summary: List all expense merchants
+      responses:
+        "200":
+          description: List of merchants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExpenseMerchant"
+    post:
+      operationId: createExpenseMerchant
+      tags: [expense-merchants]
+      summary: Create an expense merchant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseMerchantInput"
+      responses:
+        "201":
+          description: Created merchant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpenseMerchant"
+
+  /expense-merchants/{merchantId}:
+    patch:
+      operationId: updateExpenseMerchant
+      tags: [expense-merchants]
+      summary: Update an expense merchant
+      parameters:
+        - name: merchantId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseMerchantInput"
+      responses:
+        "200":
+          description: Updated merchant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpenseMerchant"
+    delete:
+      operationId: deleteExpenseMerchant
+      tags: [expense-merchants]
+      summary: Delete an expense merchant
+      parameters:
+        - name: merchantId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── CHEM FORMS ────────────────────────────────────────────────────────────────
+  /chem-forms:
+    get:
+      operationId: listChemForms
+      tags: [chem-forms]
+      summary: List all Chem Form submissions
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: ["pending", "approved", "rejected"]
+        - name: submitterId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of Chem Forms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChemForm"
+    post:
+      operationId: createChemForm
+      tags: [chem-forms]
+      summary: Submit a new Chem Form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChemFormInput"
+      responses:
+        "201":
+          description: Created Chem Form
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChemForm"
+
+  /chem-forms/{chemFormId}:
+    get:
+      operationId: getChemForm
+      tags: [chem-forms]
+      summary: Get a single Chem Form with items and receipts
+      parameters:
+        - name: chemFormId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Chem Form with items and receipts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChemFormDetail"
+    patch:
+      operationId: updateChemForm
+      tags: [chem-forms]
+      summary: Update or approve/reject a Chem Form
+      parameters:
+        - name: chemFormId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChemFormUpdate"
+      responses:
+        "200":
+          description: Updated Chem Form
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChemForm"
+    delete:
+      operationId: deleteChemForm
+      tags: [chem-forms]
+      summary: Delete a Chem Form
+      parameters:
+        - name: chemFormId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /chem-forms/{chemFormId}/receipts:
+    get:
+      operationId: listChemFormReceipts
+      tags: [chem-forms]
+      summary: List receipts for a Chem Form
+      parameters:
+        - name: chemFormId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of receipts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChemFormReceipt"
+    post:
+      operationId: addChemFormReceipt
+      tags: [chem-forms]
+      summary: Add a receipt to a Chem Form
+      parameters:
+        - name: chemFormId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChemFormReceiptInput"
+      responses:
+        "201":
+          description: Added receipt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChemFormReceipt"
+
+  # ─── OBJECT STORAGE ────────────────────────────────────────────────────────────
+  /storage/uploads/request-url:
+    post:
+      tags: [Storage]
+      operationId: requestUploadUrl
+      summary: Request a presigned URL for file upload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlRequest"
+      responses:
+        "200":
+          description: Presigned upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadUrlResponse"
+        "400":
+          description: Missing or invalid required fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
+  /storage/objects/{objectPath}:
+    get:
+      tags: [Storage]
+      operationId: getStorageObject
+      summary: Serve an object entity from PRIVATE_OBJECT_DIR
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Object content streamed
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
+  # ─── NOTE TEMPLATES ────────────────────────────────────────────────────────────
+  /note-templates:
+    get:
+      operationId: listNoteTemplates
+      tags: [note-templates]
+      summary: List all note templates
+      responses:
+        "200":
+          description: List of templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NoteTemplate"
+    post:
+      operationId: createNoteTemplate
+      tags: [note-templates]
+      summary: Create a note template (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteTemplateInput"
+      responses:
+        "201":
+          description: Created template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoteTemplate"
+
+  /note-templates/{templateId}:
+    put:
+      operationId: updateNoteTemplate
+      tags: [note-templates]
+      summary: Update a note template (admin only)
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteTemplateInput"
+      responses:
+        "200":
+          description: Updated template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoteTemplate"
+    delete:
+      operationId: deleteNoteTemplate
+      tags: [note-templates]
+      summary: Delete a note template (admin only)
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── AUTH ─────────────────────────────────────────────────────────────────────
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login with username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Invalid credentials
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout current session
+      responses:
+        "204":
+          description: Logged out
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get the currently logged-in user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Not authenticated
+
+  # ─── USERS ────────────────────────────────────────────────────────────────────
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List all user accounts
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AppUser"
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppUserInput"
+      responses:
+        "201":
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppUser"
+
+  /users/{userId}:
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update a user account
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppUserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppUser"
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      summary: Delete a user account
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── SCHEDULES ────────────────────────────────────────────────────────────────
+  /schedules:
+    get:
+      operationId: listSchedules
+      tags: [schedules]
+      summary: List work schedules
+      parameters:
+        - name: employeeId
+          in: query
+          schema:
+            type: integer
+        - name: month
+          in: query
+          schema:
+            type: string
+            description: "YYYY-MM format"
+      responses:
+        "200":
+          description: List of schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Schedule"
+    post:
+      operationId: createSchedule
+      tags: [schedules]
+      summary: Create a work schedule entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleInput"
+      responses:
+        "201":
+          description: Created schedule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Schedule"
+
+  /schedules/{scheduleId}:
+    patch:
+      operationId: updateSchedule
+      tags: [schedules]
+      summary: Update a schedule entry
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleUpdate"
+      responses:
+        "200":
+          description: Updated schedule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Schedule"
+    delete:
+      operationId: deleteSchedule
+      tags: [schedules]
+      summary: Delete a schedule entry
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── PAYSLIPS ─────────────────────────────────────────────────────────────────
+  /payslips:
+    get:
+      operationId: listPayslips
+      tags: [payslips]
+      summary: List payslips
+      parameters:
+        - name: employeeId
+          in: query
+          schema:
+            type: integer
+        - name: year
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of payslips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payslip"
+    post:
+      operationId: createPayslip
+      tags: [payslips]
+      summary: Create a payslip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayslipInput"
+      responses:
+        "201":
+          description: Created payslip
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payslip"
+
+  /payslips/{payslipId}:
+    get:
+      operationId: getPayslip
+      tags: [payslips]
+      summary: Get a specific payslip
+      parameters:
+        - name: payslipId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Payslip
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payslip"
+    delete:
+      operationId: deletePayslip
+      tags: [payslips]
+      summary: Delete a payslip
+      parameters:
+        - name: payslipId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    # ─── PROJECT ──────────────────────────────────────────────────────────────
+    Project:
+      type: object
+      required:
+        - id
+        - quoteId
+        - date
+        - location
+        - projectItem
+        - quoteAmount
+        - client
+        - clientId
+        - status
+        - depositStatus
+        - startDate
+        - endDate
+        - invoiceStatus
+        - finalReceived
+        - balanceStatus
+        - taxQuarterKwunman
+        - taxQuarterGov
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        quoteId:
+          type: string
+          description: Quote number e.g. "Q001"
+        date:
+          type: ["string", "null"]
+          description: Quote issue date YYYY-MM-DD
+        location:
+          type: string
+        projectItem:
+          type: string
+        quoteAmount:
+          type: number
+        client:
+          type: string
+        clientId:
+          type: string
+        status:
+          type: string
+          enum: ["報價中", "待通知", "待收首期", "施工中", "待收款", "待收尾期", "已完成", "不成功"]
+        depositStatus:
+          type: string
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        invoiceStatus:
+          type: string
+        finalReceived:
+          type: number
+        balanceStatus:
+          type: string
+          enum: ["待收尾數", "已收齊", "無"]
+        taxQuarterKwunman:
+          type: string
+        taxQuarterGov:
+          type: string
+        projectType:
+          type: ["string", "null"]
+        paymentTerms:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        totalPaid:
+          type: number
+          description: Sum of all payment entries (computed)
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ProjectInput:
+      type: object
+      required:
+        - location
+        - projectItem
+        - quoteAmount
+        - client
+        - clientId
+        - status
+      properties:
+        quoteId:
+          type: ["string", "null"]
+        date:
+          type: ["string", "null"]
+        location:
+          type: string
+        projectItem:
+          type: string
+        quoteAmount:
+          type: number
+        client:
+          type: string
+        clientId:
+          type: string
+        status:
+          type: string
+          enum: ["報價中", "待通知", "待收首期", "施工中", "待收款", "待收尾期", "已完成", "不成功"]
+        depositStatus:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        invoiceStatus:
+          type: ["string", "null"]
+        finalReceived:
+          type: ["number", "null"]
+        balanceStatus:
+          type: ["string", "null"]
+        projectType:
+          type: ["string", "null"]
+        paymentTerms:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    ProjectUpdate:
+      type: object
+      properties:
+        date:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        projectItem:
+          type: ["string", "null"]
+        quoteAmount:
+          type: ["number", "null"]
+        client:
+          type: ["string", "null"]
+        clientId:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+          enum: ["報價中", "待通知", "待收首期", "施工中", "待收款", "待收尾期", "已完成", "不成功", null]
+        depositStatus:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        invoiceStatus:
+          type: ["string", "null"]
+        finalReceived:
+          type: ["number", "null"]
+        balanceStatus:
+          type: ["string", "null"]
+          enum: ["待收尾數", "已收齊", "無", null]
+        projectType:
+          type: ["string", "null"]
+        paymentTerms:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    NextProjectId:
+      type: object
+      required:
+        - nextId
+      properties:
+        nextId:
+          type: string
+
+    QuarterlyStat:
+      type: object
+      required:
+        - quarter
+        - totalReceived
+        - totalQuoted
+        - projectCount
+        - completedCount
+      properties:
+        quarter:
+          type: string
+        totalReceived:
+          type: number
+        totalQuoted:
+          type: number
+        projectCount:
+          type: integer
+        completedCount:
+          type: integer
+
+    DashboardSummary:
+      type: object
+      required:
+        - activeProjectsThisMonth
+        - pendingExpensesTotal
+        - completedThisQuarter
+        - activeQuotesCount
+        - activeQuotesTotal
+        - pendingBalanceCount
+      properties:
+        activeProjectsThisMonth:
+          type: integer
+        pendingExpensesTotal:
+          type: number
+        completedThisQuarter:
+          type: integer
+        activeQuotesCount:
+          type: integer
+        activeQuotesTotal:
+          type: number
+        pendingBalanceCount:
+          type: integer
+
+    # ─── PAYMENT ──────────────────────────────────────────────────────────────
+    Payment:
+      type: object
+      required:
+        - id
+        - quoteId
+        - amount
+        - paymentType
+        - createdAt
+      properties:
+        id:
+          type: integer
+        quoteId:
+          type: string
+        amount:
+          type: number
+        paymentType:
+          type: string
+          description: "訂金 / 中期款 / 尾款 / 其他"
+        paymentDate:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    PaymentInput:
+      type: object
+      required:
+        - quoteId
+        - amount
+        - paymentType
+      properties:
+        quoteId:
+          type: string
+        amount:
+          type: number
+        paymentType:
+          type: string
+        paymentDate:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    # ─── QUOTE ITEM ───────────────────────────────────────────────────────────
+    QuoteItem:
+      type: object
+      required:
+        - id
+        - quoteId
+        - seqNo
+        - description
+        - unitPrice
+        - qty
+        - createdAt
+      properties:
+        id:
+          type: integer
+        quoteId:
+          type: string
+        seqNo:
+          type: integer
+        description:
+          type: string
+        unitPrice:
+          type: number
+        qty:
+          type: number
+        notes:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    QuoteItemInput:
+      type: object
+      required:
+        - quoteId
+        - seqNo
+        - description
+        - unitPrice
+        - qty
+      properties:
+        quoteId:
+          type: string
+        seqNo:
+          type: integer
+        description:
+          type: string
+        unitPrice:
+          type: number
+        qty:
+          type: number
+        notes:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+
+    QuoteItemUpdate:
+      type: object
+      properties:
+        seqNo:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        unitPrice:
+          type: ["number", "null"]
+        qty:
+          type: ["number", "null"]
+        notes:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+
+    # ─── CLIENT ───────────────────────────────────────────────────────────────
+    Client:
+      type: object
+      required:
+        - id
+        - clientId
+      properties:
+        id:
+          type: integer
+        clientId:
+          type: string
+        company:
+          type: ["string", "null"]
+        contactPerson:
+          type: ["string", "null"]
+        department:
+          type: ["string", "null"]
+        companyPhone:
+          type: ["string", "null"]
+        mobilePhone:
+          type: ["string", "null"]
+        privatePhone:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        address:
+          type: ["string", "null"]
+        contactInfo:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    ClientInput:
+      type: object
+      required:
+        - clientId
+      properties:
+        clientId:
+          type: string
+        company:
+          type: ["string", "null"]
+        contactPerson:
+          type: ["string", "null"]
+        department:
+          type: ["string", "null"]
+        companyPhone:
+          type: ["string", "null"]
+        mobilePhone:
+          type: ["string", "null"]
+        privatePhone:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        address:
+          type: ["string", "null"]
+        contactInfo:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    # ─── INVOICE ──────────────────────────────────────────────────────────────
+    Invoice:
+      type: object
+      required:
+        - id
+        - invoiceNo
+        - quoteId
+        - issueDate
+        - amount
+        - description
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        invoiceNo:
+          type: string
+        quoteId:
+          type: string
+        issueDate:
+          type: string
+        dueDate:
+          type: ["string", "null"]
+        amount:
+          type: number
+        description:
+          type: string
+        status:
+          type: string
+          enum: ["未收", "已收", "部分收款", "取消"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    InvoiceInput:
+      type: object
+      required:
+        - quoteId
+        - issueDate
+        - amount
+        - description
+      properties:
+        invoiceNo:
+          type: ["string", "null"]
+        quoteId:
+          type: string
+        issueDate:
+          type: string
+        dueDate:
+          type: ["string", "null"]
+        amount:
+          type: number
+        description:
+          type: string
+        status:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    InvoiceUpdate:
+      type: object
+      properties:
+        issueDate:
+          type: ["string", "null"]
+        dueDate:
+          type: ["string", "null"]
+        amount:
+          type: ["number", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    ClientUpdate:
+      type: object
+      properties:
+        company:
+          type: ["string", "null"]
+        contactPerson:
+          type: ["string", "null"]
+        department:
+          type: ["string", "null"]
+        companyPhone:
+          type: ["string", "null"]
+        mobilePhone:
+          type: ["string", "null"]
+        privatePhone:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        address:
+          type: ["string", "null"]
+        contactInfo:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    # ─── EXPENSE ──────────────────────────────────────────────────────────────
+    Expense:
+      type: object
+      required:
+        - id
+        - projectId
+        - description
+        - amount
+        - status
+        - submittedAt
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: ["string", "null"]
+        description:
+          type: string
+        amount:
+          type: number
+        category:
+          type: ["string", "null"]
+        bank:
+          type: ["string", "null"]
+        merchant:
+          type: ["string", "null"]
+        receiptUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: ["pending", "approved", "rejected"]
+        receiptDate:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        submittedAt:
+          type: string
+        updatedAt:
+          type: ["string", "null"]
+
+    ExpenseInput:
+      type: object
+      required:
+        - description
+        - amount
+      properties:
+        projectId:
+          type: ["string", "null"]
+        description:
+          type: string
+        amount:
+          type: number
+        category:
+          type: ["string", "null"]
+        bank:
+          type: ["string", "null"]
+        merchant:
+          type: ["string", "null"]
+        receiptUrl:
+          type: ["string", "null"]
+        receiptDate:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    ExpenseUpdate:
+      type: object
+      properties:
+        status:
+          type: ["string", "null"]
+          enum: ["pending", "approved", "rejected", null]
+        description:
+          type: ["string", "null"]
+        amount:
+          type: ["number", "null"]
+        category:
+          type: ["string", "null"]
+        bank:
+          type: ["string", "null"]
+        merchant:
+          type: ["string", "null"]
+        receiptUrl:
+          type: ["string", "null"]
+        receiptDate:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        projectId:
+          type: ["string", "null"]
+
+    # ─── EXPENSE CATEGORIES ────────────────────────────────────────────────────
+    ExpenseCategory:
+      type: object
+      required: [id, name, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        createdAt:
+          type: string
+
+    ExpenseCategoryInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+
+    # ─── EXPENSE MERCHANTS ─────────────────────────────────────────────────────
+    ExpenseMerchant:
+      type: object
+      required: [id, name, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        createdAt:
+          type: string
+
+    ExpenseMerchantInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+
+    # ─── CHEM FORMS ───────────────────────────────────────────────────────────
+    ChemFormItem:
+      type: object
+      required: [id, chemFormId, amount, sortOrder]
+      properties:
+        id:
+          type: integer
+        chemFormId:
+          type: integer
+        category:
+          type: ["string", "null"]
+        merchant:
+          type: ["string", "null"]
+        amount:
+          type: number
+        projectId:
+          type: ["string", "null"]
+        itemDate:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+
+    ChemFormItemInput:
+      type: object
+      required: [amount]
+      properties:
+        category:
+          type: ["string", "null"]
+        merchant:
+          type: ["string", "null"]
+        amount:
+          type: number
+        projectId:
+          type: ["string", "null"]
+        itemDate:
+          type: ["string", "null"]
+        sortOrder:
+          type: ["integer", "null"]
+
+    ChemForm:
+      type: object
+      required: [id, submitterId, submitterName, formNo, claimMonth, totalAmount, status, createdAt]
+      properties:
+        id:
+          type: integer
+        formNo:
+          type: ["string", "null"]
+        claimMonth:
+          type: string
+        department:
+          type: ["string", "null"]
+        submitterId:
+          type: integer
+        submitterName:
+          type: string
+        totalAmount:
+          type: number
+        status:
+          type: string
+          enum: ["pending", "approved", "rejected"]
+        bankUsed:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        approvedAt:
+          type: ["string", "null"]
+
+    ChemFormDetail:
+      allOf:
+        - $ref: "#/components/schemas/ChemForm"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/ChemFormItem"
+            receipts:
+              type: array
+              items:
+                $ref: "#/components/schemas/ChemFormReceipt"
+
+    ChemFormInput:
+      type: object
+      required: [submitterId, submitterName, claimMonth]
+      properties:
+        submitterId:
+          type: integer
+        submitterName:
+          type: string
+        claimMonth:
+          type: string
+        department:
+          type: ["string", "null"]
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChemFormItemInput"
+
+    ChemFormUpdate:
+      type: object
+      properties:
+        status:
+          type: ["string", "null"]
+          enum: ["pending", "approved", "rejected", null]
+        bankUsed:
+          type: ["string", "null"]
+        claimMonth:
+          type: ["string", "null"]
+        department:
+          type: ["string", "null"]
+
+    ChemFormReceipt:
+      type: object
+      required: [id, chemFormId, fileUrl, fileName, createdAt]
+      properties:
+        id:
+          type: integer
+        chemFormId:
+          type: integer
+        fileUrl:
+          type: string
+        fileName:
+          type: string
+        createdAt:
+          type: string
+
+    ChemFormReceiptInput:
+      type: object
+      required: [fileUrl, fileName]
+      properties:
+        fileUrl:
+          type: string
+        fileName:
+          type: string
+
+    # ─── STORAGE ──────────────────────────────────────────────────────────────
+    UploadUrlRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        size:
+          type: integer
+          minimum: 1
+        contentType:
+          type: string
+          minLength: 1
+
+    UploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+          format: uri
+        objectPath:
+          type: string
+
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+    # ─── AUTH ─────────────────────────────────────────────────────────────────
+    LoginInput:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    AuthUser:
+      type: object
+      required:
+        - id
+        - username
+        - role
+        - fullName
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        role:
+          type: string
+          enum: ["管理者", "參與者", "員工"]
+        fullName:
+          type: string
+        phone:
+          type: ["string", "null"]
+
+    # ─── USER ─────────────────────────────────────────────────────────────────
+    AppUser:
+      type: object
+      required:
+        - id
+        - username
+        - role
+        - fullName
+        - isActive
+        - createdAt
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        role:
+          type: string
+          enum: ["管理者", "參與者", "員工"]
+        fullName:
+          type: string
+        phone:
+          type: ["string", "null"]
+        isActive:
+          type: boolean
+        defaultDailyRate:
+          type: ["number", "null"]
+          description: 預設日薪 (HKD)
+        defaultMonthlyRate:
+          type: ["number", "null"]
+          description: 預設月薪 (HKD)
+        createdAt:
+          type: string
+
+    AppUserInput:
+      type: object
+      required:
+        - username
+        - password
+        - role
+        - fullName
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: ["管理者", "參與者", "員工"]
+        fullName:
+          type: string
+        phone:
+          type: ["string", "null"]
+
+    AppUserUpdate:
+      type: object
+      properties:
+        role:
+          type: ["string", "null"]
+          enum: ["管理者", "參與者", "員工", null]
+        fullName:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        isActive:
+          type: ["boolean", "null"]
+        password:
+          type: ["string", "null"]
+        defaultDailyRate:
+          type: ["number", "null"]
+        defaultMonthlyRate:
+          type: ["number", "null"]
+
+    # ─── SCHEDULE ─────────────────────────────────────────────────────────────
+    Schedule:
+      type: object
+      required:
+        - id
+        - employeeId
+        - workDate
+        - createdAt
+      properties:
+        id:
+          type: integer
+        employeeId:
+          type: integer
+        workDate:
+          type: string
+          description: ISO date YYYY-MM-DD
+        location:
+          type: ["string", "null"]
+        projectId:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ScheduleInput:
+      type: object
+      required:
+        - employeeId
+        - workDate
+      properties:
+        employeeId:
+          type: integer
+        workDate:
+          type: string
+        location:
+          type: ["string", "null"]
+        projectId:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    ScheduleUpdate:
+      type: object
+      properties:
+        workDate:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        projectId:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    # ─── PAYSLIP ──────────────────────────────────────────────────────────────
+    Payslip:
+      type: object
+      required:
+        - id
+        - employeeId
+        - year
+        - month
+        - basicSalary
+        - allowances
+        - overtime
+        - deductions
+        - netPay
+        - issuedAt
+      properties:
+        id:
+          type: integer
+        employeeId:
+          type: integer
+        year:
+          type: integer
+        month:
+          type: integer
+        basicSalary:
+          type: number
+        allowances:
+          type: number
+        overtime:
+          type: number
+        deductions:
+          type: number
+        netPay:
+          type: number
+        notes:
+          type: ["string", "null"]
+        issuedAt:
+          type: string
+
+    NoteTemplate:
+      type: object
+      required: [id, code, title, content, sortOrder, createdAt]
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+
+    NoteTemplateInput:
+      type: object
+      required: [code, title, content]
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        sortOrder:
+          type: integer
+
+    PayslipInput:
+      type: object
+      required:
+        - employeeId
+        - year
+        - month
+        - basicSalary
+        - netPay
+      properties:
+        employeeId:
+          type: integer
+        year:
+          type: integer
+        month:
+          type: integer
+        basicSalary:
+          type: number
+        allowances:
+          type: number
+        overtime:
+          type: number
+        deductions:
+          type: number
+        netPay:
+          type: number
+        notes:
+          type: ["string", "null"]
