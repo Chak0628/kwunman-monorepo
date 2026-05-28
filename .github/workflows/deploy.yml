@@ -23,10 +23,10 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build frontend
-        run: cd artifacts/kwunman-os && pnpm exec vite build --emptyOutDir
+        run: pnpm --filter @workspace/kwunman-os exec vite build --emptyOutDir
 
       - name: Build backend
-        run: cd artifacts/api-server && pnpm run build
+        run: pnpm --filter @workspace/api-server run build
 
       - name: Prepare Vercel output
         run: |
