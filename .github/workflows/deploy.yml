@@ -46,7 +46,7 @@ jobs:
           echo "import app from './index.mjs'; export default app;" > .vercel/output/functions/api/[...path].func/index.js
           echo '{ "runtime": "nodejs22.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
 
-          echo '{ "version": 3, "routes": [ { "src": "/api/(.*)", "dest": "/api/[...path]" } ] }' > .vercel/output/config.json
+          echo '{ "version": 3, "routes": [ { "src": "/api/(.*)", "dest": "/api/[...path]", "handler": "rewrite" } ] }' > .vercel/output/config.json
 
       - name: Deploy to Vercel
         run: |
