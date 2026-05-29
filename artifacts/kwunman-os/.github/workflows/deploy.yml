@@ -1,4 +1,4 @@
-name: Build and Deploy to Vercel
+name: Smart Deploy to Vercel
 
 on:
   push:
@@ -11,70 +11,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup monorepo structure
-        run: |
-          mkdir -p artifacts/kwunman-os lib
-          shopt -s extglob
-          mv !(artifacts|lib|.git|.github) artifacts/kwunman-os/ 2>/dev/null || true
-          cp artifacts/kwunman-os/pnpm-workspace.yaml .
-          cp artifacts/kwunman-os/tsconfig.base.json . 2>/dev/null || true
-          cp artifacts/kwunman-os/tsconfig.json . 2>/dev/null || true
-          cp artifacts/kwunman-os/.npmrc . 2>/dev/null || true
-          echo '{
-            "name": "workspace",
-            "version": "0.0.0",
-            "license": "MIT",
-            "scripts": {
-              "build": "vite build --emptyOutDir",
-              "typecheck:libs": "tsc --build",
-              "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
-            },
-            "private": true,
-            "devDependencies": {
-              "prettier": "^3.8.3",
-              "typescript": "~5.9.3"
-            },
-            "dependencies": {
-              "xlsx": "^0.18.5"
-            },
-            "pnpm": {
-              "overrides": {
-                "react": "19.1.0",
-                "react-dom": "19.1.0"
-              }
-            }
-          }' > package.json
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install pnpm
-        run: npm install -g pnpm@9.15.4
+        run: npm install -g pnpm@11.3.0
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: cd artifacts/kwunman-os && pnpm run build
+      - name: Rebuild esbuild (ensure binary)
+        run: pnpm rebuild esbuild
 
-      - name: Deploy to Vercel (Prebuilt)
+      - name: Build frontend
         run: |
           cd artifacts/kwunman-os
+          pnpm exec vite build --emptyOutDir
+
+      - name: Build backend
+        run: cd artifacts/api-server && pnpm run build
+
+      - name: Prepare Vercel output
+        run: |
           mkdir -p .vercel/output/static
-          # 将构建好的 dist 文件复制到输出目录
-          cp -r dist/* .vercel/output/static/
-          # 修复文件结构：将 public 文件夹的内容移动到根目录，然后删除空的 public 文件夹
-          cd .vercel/output/static
-          if [ -d public ]; then
-            mv public/* .
-            rm -rf public
+          cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
+          if [ -d .vercel/output/static/public ]; then
+            mv .vercel/output/static/public/* .vercel/output/static/
+            rm -rf .vercel/output/static/public
           fi
-          cd ../../..
-          # 创建必要的配置文件
-          echo '{ "version": 3 }' > .vercel/output/config.json
-          # 加入 SPA 路由规则到输出目录
           echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
-          # 使用 --prebuilt 部署，Vercel 将跳过所有构建步骤
+
+          mkdir -p .vercel/output/functions/api/[...path].func
+          cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/
+          echo "import app from './index.mjs'; export default app;" > .vercel/output/functions/api/[...path].func/index.js
+          echo '{ "runtime": "nodejs22.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
+
+          echo '{ "version": 3 }' > .vercel/output/config.json
+          echo '{ "routes": [ { "src": "/api/(.*)", "dest": "/api/[...path]" } ] }' >> .vercel/output/config.json
+
+      - name: Deploy to Vercel
+        run: |
           npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
