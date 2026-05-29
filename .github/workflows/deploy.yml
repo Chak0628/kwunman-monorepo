@@ -1,31 +1,54 @@
-name: Deploy to Vercel (Local Prebuilt)
+name: Smart Deploy to Vercel
 
 on:
   push:
     branches: [main]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy prebuilt static files to Vercel
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm install -g pnpm@11.3.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild esbuild (ensure binary)
+        run: pnpm rebuild esbuild
+
+      - name: Build frontend
+        run: cd artifacts/kwunman-os && pnpm exec vite build --emptyOutDir
+
+      - name: Build backend
+        run: cd artifacts/api-server && pnpm run build
+
+      - name: Prepare Vercel output
         run: |
-          cd artifacts/kwunman-os
-          # 确保 dist 存在（由本地构建并提交）
-          if [ ! -d "dist" ]; then
-            echo "Error: dist folder not found. Please build locally first."
-            exit 1
-          fi
-          # 准备 Vercel 输出目录
           mkdir -p .vercel/output/static
-          cp -r dist/* .vercel/output/static/
+          cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
           if [ -d .vercel/output/static/public ]; then
             mv .vercel/output/static/public/* .vercel/output/static/
             rm -rf .vercel/output/static/public
           fi
           echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
+
+          mkdir -p .vercel/output/functions/api/[...path].func
+          cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/
+          echo "import app from './index.mjs'; export default app;" > .vercel/output/functions/api/[...path].func/index.js
+          echo '{ "runtime": "nodejs22.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
+
           echo '{ "version": 3 }' > .vercel/output/config.json
-          # 部署
+          echo '{ "routes": [ { "src": "/api/(.*)", "dest": "/api/[...path]" } ] }' >> .vercel/output/config.json
+
+      - name: Deploy to Vercel
+        run: |
           npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
