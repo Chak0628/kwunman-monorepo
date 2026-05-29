@@ -22,37 +22,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Rebuild esbuild (ensure binary)
+        run: pnpm rebuild esbuild
+
       - name: Build frontend
-        run: |
-          cd artifacts/kwunman-os
-          # 直接调用 vite 构建，确保输出到当前目录的 dist
-          ../../node_modules/.bin/vite build --emptyOutDir --outDir dist
-          # 列出构建产物，便于调试
-          ls -la dist/
+        run: pnpm --filter @workspace/kwunman-os run build
 
       - name: Build backend
-        run: cd artifacts/api-server && pnpm run build
+        run: pnpm --filter @workspace/api-server run build
 
       - name: Prepare Vercel output
         run: |
-          # 静态文件
           mkdir -p .vercel/output/static
           cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
-          # 如果静态文件包含 public 子文件夹，将其内容移到根目录
           if [ -d .vercel/output/static/public ]; then
             mv .vercel/output/static/public/* .vercel/output/static/
             rm -rf .vercel/output/static/public
           fi
           echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
 
-          # API Serverless Function
           mkdir -p .vercel/output/functions/api/[...path].func
           cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/
-          # 生成入口文件
           echo "import app from './index.mjs'; export default app;" > .vercel/output/functions/api/[...path].func/index.js
           echo '{ "runtime": "nodejs22.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
 
-          # Vercel 配置
           echo '{ "version": 3 }' > .vercel/output/config.json
           echo '{ "routes": [ { "src": "/api/(.*)", "dest": "/api/[...path]" } ] }' >> .vercel/output/config.json
 
