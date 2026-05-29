@@ -1,0 +1,9 @@
+{
+  "framework": "vite",
+  "installCommand": "npm install -g pnpm@9.15.4 && pnpm install",
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

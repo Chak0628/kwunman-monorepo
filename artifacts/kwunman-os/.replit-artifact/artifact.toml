@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "冠文鋼結構管理系統"
+version = "1.0.0"
+id = "artifacts/kwunman-os"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23179
+
+[services.development]
+run = "pnpm --filter @workspace/kwunman-os run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/kwunman-os", "run", "build" ]
+publicDir = "artifacts/kwunman-os/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23179"
+BASE_PATH = "/"

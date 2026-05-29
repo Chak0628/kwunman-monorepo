@@ -1,0 +1,80 @@
+name: Build and Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup monorepo structure
+        run: |
+          mkdir -p artifacts/kwunman-os lib
+          shopt -s extglob
+          mv !(artifacts|lib|.git|.github) artifacts/kwunman-os/ 2>/dev/null || true
+          cp artifacts/kwunman-os/pnpm-workspace.yaml .
+          cp artifacts/kwunman-os/tsconfig.base.json . 2>/dev/null || true
+          cp artifacts/kwunman-os/tsconfig.json . 2>/dev/null || true
+          cp artifacts/kwunman-os/.npmrc . 2>/dev/null || true
+          echo '{
+            "name": "workspace",
+            "version": "0.0.0",
+            "license": "MIT",
+            "scripts": {
+              "build": "vite build --emptyOutDir",
+              "typecheck:libs": "tsc --build",
+              "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
+            },
+            "private": true,
+            "devDependencies": {
+              "prettier": "^3.8.3",
+              "typescript": "~5.9.3"
+            },
+            "dependencies": {
+              "xlsx": "^0.18.5"
+            },
+            "pnpm": {
+              "overrides": {
+                "react": "19.1.0",
+                "react-dom": "19.1.0"
+              }
+            }
+          }' > package.json
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm@9.15.4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: cd artifacts/kwunman-os && pnpm run build
+
+      - name: Deploy to Vercel (Prebuilt)
+        run: |
+          cd artifacts/kwunman-os
+          mkdir -p .vercel/output/static
+          # 将构建好的 dist 文件复制到输出目录
+          cp -r dist/* .vercel/output/static/
+          # 修复文件结构：将 public 文件夹的内容移动到根目录，然后删除空的 public 文件夹
+          cd .vercel/output/static
+          if [ -d public ]; then
+            mv public/* .
+            rm -rf public
+          fi
+          cd ../../..
+          # 创建必要的配置文件
+          echo '{ "version": 3 }' > .vercel/output/config.json
+          # 加入 SPA 路由规则到输出目录
+          echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
+          # 使用 --prebuilt 部署，Vercel 将跳过所有构建步骤
+          npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
