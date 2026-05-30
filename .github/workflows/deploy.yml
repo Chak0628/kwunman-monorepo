@@ -33,20 +33,49 @@ jobs:
 
       - name: Prepare Vercel output
         run: |
+          set -e  # 出错立即终止
+
+          # 静态文件
           mkdir -p .vercel/output/static
-          cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
+          cp -r artifacts/kwunman-os/dist/* .vercel/output/static/ 2>/dev/null || true
+          # 如果存在 public 子目录，将其内容移到根目录
           if [ -d .vercel/output/static/public ]; then
-            mv .vercel/output/static/public/* .vercel/output/static/
+            mv .vercel/output/static/public/* .vercel/output/static/ 2>/dev/null || true
             rm -rf .vercel/output/static/public
           fi
           echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
 
+          # 验证静态文件：确保 index.html 存在
+          if [ ! -f .vercel/output/static/index.html ]; then
+            echo "错误：前端构建产物中缺少 index.html！"
+            exit 1
+          fi
+
+          # API 函数
           mkdir -p .vercel/output/functions/api/[...path].func
-          cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/
+          cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/ 2>/dev/null || true
           echo "import app from './index.mjs'; export default app;" > .vercel/output/functions/api/[...path].func/index.js
           echo '{ "runtime": "nodejs22.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
 
-          echo '{ "version": 3, "routes": [ { "src": "/api/(.*)", "dest": "/api/[...path]", "handler": "rewrite" } ] }' > .vercel/output/config.json
+          # 验证 API 函数：确保 index.mjs 存在
+          if [ ! -f .vercel/output/functions/api/\[...path\].func/index.mjs ]; then
+            echo "错误：后端构建产物中缺少 index.mjs！"
+            exit 1
+          fi
+
+          # 生成正确的 config.json（使用 heredoc 避免转义问题）
+          cat > .vercel/output/config.json << 'EOF'
+          {
+            "version": 3,
+            "routes": [
+              {
+                "src": "/api/(.*)",
+                "dest": "/api/[...path]",
+                "handler": "rewrite"
+              }
+            ]
+          }
+          EOF
 
       - name: Deploy to Vercel
         run: |
