@@ -108,4 +108,4 @@ jobs:
 
       - name: Deploy to Vercel (Prebuilt)
         run: |
-          npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yesprod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
+          npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
