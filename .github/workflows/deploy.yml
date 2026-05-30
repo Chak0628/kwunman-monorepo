@@ -34,6 +34,8 @@ jobs:
       - name: Prepare prebuilt output
         run: |
           set -e
+
+          # === 静态文件 ===
           mkdir -p .vercel/output/static
           cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
           if [ -d .vercel/output/static/public ]; then
@@ -48,13 +50,25 @@ jobs:
           }
           EOF
 
+          # === API 函数 ===
           FUNC_DIR=.vercel/output/functions/api/[...path].func
           mkdir -p $FUNC_DIR
+
+          # 使用 pnpm deploy 安装后端运行时依赖到临时目录
           pnpm --filter @workspace/api-server deploy tmp-api --legacy
+
+          # 复制所有文件（包括 node_modules）到函数目录
           cp -r tmp-api/* $FUNC_DIR/
           rm -rf tmp-api
-          rm -f $FUNC_DIR/package.json
 
+          # 关键修复：添加极简 package.json 声明 ESM，但无依赖项，防止 Vercel 安装
+          cat > $FUNC_DIR/package.json << 'EOF'
+          {
+            "type": "module"
+          }
+          EOF
+
+          # 生成函数入口文件 (index.js)
           cat > $FUNC_DIR/index.js << 'EOF'
           export default async function handler(req, res) {
             if (req.url === '/api/debug') {
@@ -63,6 +77,7 @@ jobs:
                 envKeys: Object.keys(process.env).filter(k => !k.startsWith('npm_')).slice(0, 10),
               });
             }
+
             try {
               const { default: app } = await import('./dist/index.mjs');
               return new Promise((resolve, reject) => {
@@ -77,6 +92,7 @@ jobs:
           }
           EOF
 
+          # 函数配置
           cat > $FUNC_DIR/.vc-config.json << 'EOF'
           {
             "runtime": "nodejs22.x",
@@ -85,22 +101,11 @@ jobs:
           }
           EOF
 
+          # === 根 config.json ===
           cat > .vercel/output/config.json << 'EOF'
           { "version": 3 }
           EOF
 
-      - name: Debug function directory
-        run: |
-          echo "=== Function dir contents ==="
-          ls -la .vercel/output/functions/api/\[...path\].func/
-          echo "=== Checking dist/index.mjs ==="
-          if [ -f .vercel/output/functions/api/\[...path\].func/dist/index.mjs ]; then
-            echo "dist/index.mjs EXISTS"
-          else
-            echo "MISSING dist/index.mjs!"
-            exit 1
-          fi
-
       - name: Deploy to Vercel (Prebuilt)
         run: |
-          npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
+          npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yesprod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
