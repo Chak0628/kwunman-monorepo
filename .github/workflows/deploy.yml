@@ -35,6 +35,7 @@ jobs:
         run: |
           set -e
           mkdir -p deploy-out
+          echo '{ "type": "module" }' > deploy-out/package.json
           cp -r artifacts/kwunman-os/dist/* deploy-out/
           if [ -d deploy-out/public ]; then
             mv deploy-out/public/* deploy-out/
