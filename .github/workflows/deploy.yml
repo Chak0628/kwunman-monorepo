@@ -34,25 +34,15 @@ jobs:
       - name: Prepare deployment directory
         run: |
           set -e
-
-          # 创建临时部署目录
           mkdir -p deploy-out
-
-          # 复制前端静态文件
           cp -r artifacts/kwunman-os/dist/* deploy-out/
-          # 如果存在 public 子目录，将其内容移到根目录
           if [ -d deploy-out/public ]; then
             mv deploy-out/public/* deploy-out/
             rm -rf deploy-out/public
           fi
-
-          # 复制后端构建产物到 api/ 目录（作为函数体）
           mkdir -p deploy-out/api
           cp -r artifacts/api-server/dist/* deploy-out/api/
-          # 创建 API 入口文件，从同级目录导入 index.mjs
           echo "import app from './index.mjs'; export default app;" > deploy-out/api/\[...path\].js
-
-          # 创建 vercel.json（SPA 路由 + API 重写）
           cat > deploy-out/vercel.json << 'EOF'
           {
             "rewrites": [
@@ -65,4 +55,6 @@ jobs:
       - name: Deploy to Vercel
         run: |
           cd deploy-out
+          rm -rf .vercel
+          npx vercel link --project kwunman-monorepo --token ${{ secrets.VERCEL_TOKEN }} --yes
           npx vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
