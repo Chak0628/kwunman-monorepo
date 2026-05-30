@@ -97,7 +97,15 @@ jobs:
 
           # === 根 config.json ===
           cat > .vercel/output/config.json << 'EOF'
-          { "version": 3 }
+          {
+            "version": 3,
+            "routes": [
+              {
+                "src": "/api/(.*)",
+                "dest": "/api/[...path]"
+              }
+            ]
+          }
           EOF
 
       - name: Deploy to Vercel (Prebuilt)
