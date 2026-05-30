@@ -46,9 +46,19 @@ jobs:
           # 复制后端 package.json 并安装生产依赖
           cp artifacts/api-server/package.json deploy-out/api/
           cd deploy-out/api
-          npm install --production --no-audit --no-fund
+          # 移除 workspace 协议依赖，因为它们已编译到 dist 中
+          node -e "
+            const pkg = require('./package.json');
+            const deps = pkg.dependencies || {};
+            for (const key of Object.keys(deps)) {
+              if (deps[key].startsWith('workspace:')) {
+                delete deps[key];
+              }
+            }
+            require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+          "
+          npm install --omit=dev --no-audit --no-fund
           cd ../../..
-          # 创建调试处理器
           cat > deploy-out/api/\[...path\].js << 'EOF'
           export default async function handler(req, res) {
             if (req.url === '/api/debug') {
