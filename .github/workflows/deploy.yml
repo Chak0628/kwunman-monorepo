@@ -42,8 +42,8 @@ jobs:
             rm -rf deploy-out/public
           fi
           mkdir -p deploy-out/api
-          # 使用 pnpm deploy 自动提取后端及其所有运行时依赖
-          pnpm --filter @workspace/api-server deploy deploy-out/api
+          # 使用 pnpm deploy 自动提取后端及其所有运行时依赖 (添加 --legacy)
+          pnpm --filter @workspace/api-server deploy deploy-out/api --legacy
           cat > deploy-out/api/\[...path\].js << 'EOF'
           export default async function handler(req, res) {
             if (req.url === '/api/debug') {
