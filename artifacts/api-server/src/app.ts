@@ -5,9 +5,9 @@ import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
-const SESSION_SECRET = process.env["SESSION_SECRET"];
-if (!SESSION_SECRET) {
-  throw new Error("SESSION_SECRET environment variable is required");
+const SESSION_SECRET = process.env["SESSION_SECRET"] || "fallback-secret-for-debug";
+if (!process.env["SESSION_SECRET"]) {
+  console.warn("WARNING: SESSION_SECRET not set, using insecure fallback. This is for debugging only.");
 }
 
 const app: Express = express();

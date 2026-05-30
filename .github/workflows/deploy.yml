@@ -43,7 +43,29 @@ jobs:
           fi
           mkdir -p deploy-out/api
           cp -r artifacts/api-server/dist/* deploy-out/api/
-          echo "import app from './index.mjs'; export default app;" > deploy-out/api/\[...path\].js
+          cat > deploy-out/api/\[...path\].js << 'EOF'
+          export default async function handler(req, res) {
+            if (req.url === '/api/debug') {
+              return res.status(200).json({
+                sessionSecretSet: !!process.env.SESSION_SECRET,
+                envKeys: Object.keys(process.env).filter(k => !k.startsWith('npm_')).slice(0, 10),
+              });
+            }
+
+            try {
+              const { default: app } = await import('./index.mjs');
+              return new Promise((resolve, reject) => {
+                app(req, res, (err) => {
+                  if (err) return reject(err);
+                  resolve();
+                });
+              });
+            } catch (error) {
+              res.status(500).json({ error: error.message, stack: error.stack });
+            }
+          }
+          EOF
+
           cat > deploy-out/vercel.json << 'EOF'
           {
             "rewrites": [
@@ -52,6 +74,13 @@ jobs:
             ]
           }
           EOF
+
+      - name: Debug - show deploy-out structure
+        run: |
+          echo "=== deploy-out root ==="
+          ls -la deploy-out/
+          echo "=== deploy-out/api ==="
+          ls -la deploy-out/api/
 
       - name: Deploy to Vercel
         run: |
