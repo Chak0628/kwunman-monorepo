@@ -31,20 +31,39 @@ jobs:
       - name: Build backend
         run: cd artifacts/api-server && pnpm run build
 
-      - name: Prepare deployment directory
+      - name: Prepare prebuilt output
         run: |
           set -e
-          mkdir -p deploy-out
-          echo '{ "type": "module" }' > deploy-out/package.json
-          cp -r artifacts/kwunman-os/dist/* deploy-out/
-          if [ -d deploy-out/public ]; then
-            mv deploy-out/public/* deploy-out/
-            rm -rf deploy-out/public
+
+          # === 静态文件 ===
+          mkdir -p .vercel/output/static
+          cp -r artifacts/kwunman-os/dist/* .vercel/output/static/
+          if [ -d .vercel/output/static/public ]; then
+            mv .vercel/output/static/public/* .vercel/output/static/
+            rm -rf .vercel/output/static/public
           fi
-          mkdir -p deploy-out/api
-          # 使用 pnpm deploy 自动提取后端及其所有运行时依赖 (添加 --legacy)
-          pnpm --filter @workspace/api-server deploy deploy-out/api --legacy
-          cat > deploy-out/api/\[...path\].js << 'EOF'
+          # SPA 重写规则（放在静态目录）
+          cat > .vercel/output/static/vercel.json << 'EOF'
+          {
+            "rewrites": [
+              { "source": "/(.*)", "destination": "/index.html" }
+            ]
+          }
+          EOF
+
+          # === API 函数 ===
+          FUNC_DIR=.vercel/output/functions/api/[...path].func
+          mkdir -p $FUNC_DIR
+
+          # 使用 pnpm deploy 安装后端运行时依赖到临时目录
+          pnpm --filter @workspace/api-server deploy tmp-api --legacy
+
+          # 复制所有文件（包括 node_modules）到函数目录
+          cp -r tmp-api/* $FUNC_DIR/
+          rm -rf tmp-api
+
+          # 生成函数入口文件 (index.js)
+          cat > $FUNC_DIR/index.js << 'EOF'
           export default async function handler(req, res) {
             if (req.url === '/api/debug') {
               return res.status(200).json({
@@ -54,7 +73,7 @@ jobs:
             }
 
             try {
-              const { default: app } = await import('./index.mjs');
+              const { default: app } = await import('./dist/index.mjs');
               return new Promise((resolve, reject) => {
                 app(req, res, (err) => {
                   if (err) return reject(err);
@@ -66,25 +85,30 @@ jobs:
             }
           }
           EOF
-          cat > deploy-out/vercel.json << 'EOF'
+
+          # 函数配置
+          cat > $FUNC_DIR/.vc-config.json << 'EOF'
           {
-            "rewrites": [
-              { "source": "/api/(.*)", "destination": "/api/[...path]" },
-              { "source": "/(.*)", "destination": "/index.html" }
+            "runtime": "nodejs22.x",
+            "handler": "index.js",
+            "includeFiles": "**/*"
+          }
+          EOF
+
+          # === 根 config.json ===
+          cat > .vercel/output/config.json << 'EOF'
+          {
+            "version": 3,
+            "routes": [
+              {
+                "src": "/api/(.*)",
+                "dest": "/api/[...path]",
+                "handler": "rewrite"
+              }
             ]
           }
           EOF
 
-      - name: Debug - show deploy-out structure
+      - name: Deploy to Vercel (Prebuilt)
         run: |
-          echo "=== deploy-out root ==="
-          ls -la deploy-out/
-          echo "=== deploy-out/api ==="
-          ls -la deploy-out/api/
-
-      - name: Deploy to Vercel
-        run: |
-          cd deploy-out
-          rm -rf .vercel
-          npx vercel link --project kwunman-monorepo --token ${{ secrets.VERCEL_TOKEN }} --yes
-          npx vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
+          npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
