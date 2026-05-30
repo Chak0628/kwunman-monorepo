@@ -31,52 +31,38 @@ jobs:
       - name: Build backend
         run: cd artifacts/api-server && pnpm run build
 
-      - name: Prepare Vercel output
+      - name: Prepare deployment directory
         run: |
-          set -e  # 出错立即终止
+          set -e
 
-          # 静态文件
-          mkdir -p .vercel/output/static
-          cp -r artifacts/kwunman-os/dist/* .vercel/output/static/ 2>/dev/null || true
+          # 创建临时部署目录
+          mkdir -p deploy-out
+
+          # 复制前端静态文件
+          cp -r artifacts/kwunman-os/dist/* deploy-out/
           # 如果存在 public 子目录，将其内容移到根目录
-          if [ -d .vercel/output/static/public ]; then
-            mv .vercel/output/static/public/* .vercel/output/static/ 2>/dev/null || true
-            rm -rf .vercel/output/static/public
-          fi
-          echo '{ "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ] }' > .vercel/output/static/vercel.json
-
-          # 验证静态文件：确保 index.html 存在
-          if [ ! -f .vercel/output/static/index.html ]; then
-            echo "错误：前端构建产物中缺少 index.html！"
-            exit 1
+          if [ -d deploy-out/public ]; then
+            mv deploy-out/public/* deploy-out/
+            rm -rf deploy-out/public
           fi
 
-          # API 函数
-          mkdir -p .vercel/output/functions/api/[...path].func
-          cp -r artifacts/api-server/dist/* .vercel/output/functions/api/[...path].func/ 2>/dev/null || true
-          echo "import app from './index.mjs'; export default app;" > .vercel/output/functions/api/[...path].func/index.js
-          echo '{ "runtime": "nodejs22.x", "includeFiles": "**/*" }' > .vercel/output/functions/api/[...path].func/.vc-config.json
+          # 复制后端构建产物到 api/ 目录（作为函数体）
+          mkdir -p deploy-out/api
+          cp -r artifacts/api-server/dist/* deploy-out/api/
+          # 创建 API 入口文件，从同级目录导入 index.mjs
+          echo "import app from './index.mjs'; export default app;" > deploy-out/api/\[...path\].js
 
-          # 验证 API 函数：确保 index.mjs 存在
-          if [ ! -f .vercel/output/functions/api/\[...path\].func/index.mjs ]; then
-            echo "错误：后端构建产物中缺少 index.mjs！"
-            exit 1
-          fi
-
-          # 生成正确的 config.json（使用 heredoc 避免转义问题）
-          cat > .vercel/output/config.json << 'EOF'
+          # 创建 vercel.json（SPA 路由 + API 重写）
+          cat > deploy-out/vercel.json << 'EOF'
           {
-            "version": 3,
-            "routes": [
-              {
-                "src": "/api/(.*)",
-                "dest": "/api/[...path]",
-                "handler": "rewrite"
-              }
+            "rewrites": [
+              { "source": "/api/(.*)", "destination": "/api/[...path]" },
+              { "source": "/(.*)", "destination": "/index.html" }
             ]
           }
           EOF
 
       - name: Deploy to Vercel
         run: |
-          npx vercel deploy --prod --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --yes
+          cd deploy-out
+          npx vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
