@@ -1,3 +1,36 @@
+name: Smart Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm install -g pnpm@11.3.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild esbuild (ensure binary)
+        run: pnpm rebuild esbuild
+
+      - name: Build frontend
+        run: cd artifacts/kwunman-os && pnpm exec vite build --emptyOutDir
+
+      - name: Build backend
+        run: cd artifacts/api-server && pnpm run build
+
       - name: Prepare deployment directory
         run: |
           set -e
@@ -10,11 +43,12 @@
           fi
           mkdir -p deploy-out/api
           cp -r artifacts/api-server/dist/* deploy-out/api/
-          # 复制后端 package.json 并安装生产依赖（解决运行时缺少包的问题）
+          # 复制后端 package.json 并安装生产依赖
           cp artifacts/api-server/package.json deploy-out/api/
           cd deploy-out/api
           npm install --production --no-audit --no-fund
           cd ../../..
+          # 创建调试处理器
           cat > deploy-out/api/\[...path\].js << 'EOF'
           export default async function handler(req, res) {
             if (req.url === '/api/debug') {
@@ -37,6 +71,7 @@
             }
           }
           EOF
+          # 创建 vercel.json 路由配置
           cat > deploy-out/vercel.json << 'EOF'
           {
             "rewrites": [
@@ -45,3 +80,17 @@
             ]
           }
           EOF
+
+      - name: Debug - show deploy-out structure
+        run: |
+          echo "=== deploy-out root ==="
+          ls -la deploy-out/
+          echo "=== deploy-out/api ==="
+          ls -la deploy-out/api/
+
+      - name: Deploy to Vercel
+        run: |
+          cd deploy-out
+          rm -rf .vercel
+          npx vercel link --project kwunman-monorepo --token ${{ secrets.VERCEL_TOKEN }} --yes
+          npx vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
