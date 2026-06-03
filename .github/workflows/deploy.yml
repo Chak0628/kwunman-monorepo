@@ -45,6 +45,7 @@ jobs:
           cat > .vercel/output/static/vercel.json << 'EOF'
           {
             "rewrites": [
+              { "source": "/api/(.*)", "destination": "https://kwunman-monorepo.onrender.com/api/$1" },
               { "source": "/(.*)", "destination": "/index.html" }
             ]
           }
