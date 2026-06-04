@@ -102,9 +102,17 @@ jobs:
           }
           EOF
 
-          # === 根 config.json ===
+          # === 根 config.json（包含 API 代理） ===
           cat > .vercel/output/config.json << 'EOF'
-          { "version": 3 }
+          {
+            "version": 3,
+            "routes": [
+              {
+                "src": "/api/(.*)",
+                "dest": "https://kwunman-monorepo.onrender.com/api/$1"
+              }
+            ]
+          }
           EOF
 
       - name: Deploy to Vercel (Prebuilt)
