@@ -22,12 +22,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+// 使用环境变量，若未设置则默认指向 Render 后端
+const apiBase = import.meta.env.VITE_API_BASE_URL || "https://kwunman-monorepo.onrender.com";
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/auth/me", { credentials: "include" })
+    fetch(`${apiBase}/api/auth/me`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data: AuthUser | null) => setUser(data))
       .catch(() => setUser(null))
@@ -35,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
-    const res = await fetch("/api/auth/login", {
+    const res = await fetch(`${apiBase}/api/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -50,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    await fetch(`${apiBase}/api/auth/logout`, { method: "POST", credentials: "include" });
     setUser(null);
   }, []);
 
